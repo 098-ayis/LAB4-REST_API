@@ -4,15 +4,19 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-//database connection
-include 'db_connection.php';
-
-$inputData = file_get_contents("php://input");
-$request = json_decode($inputData, true); 
-
-$inventory_id = $request['inventory_id'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    //database connection
+    include 'db_connection.php';
+
+    $inputData = file_get_contents("php://input");
+    $request = json_decode($inputData, true); 
+
+    $inventory_id = $request['inventory_id'] ?? '';
 
     // Validate id
     if (empty($inventory_id)) {
