@@ -4,9 +4,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-//database connection
-include 'db_connection.php';
-
 $inputData = file_get_contents("php://input");
 $request = json_decode($inputData, true); 
 
@@ -18,8 +15,15 @@ $price        = $request['base_price_per_stem'] ?? '';
 $date_arrived = $request['date_arrived'] ?? '';
 $shelf_life   = $request['shelf_life'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    //database connection
+    include 'db_connection.php';
+    
     // Validate id
     if (empty($inventory_id)) {
         http_response_code(400);
