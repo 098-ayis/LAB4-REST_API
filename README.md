@@ -1,9 +1,5 @@
 # LAB4-REST_API
 
-Leader:
-Chariesse Lobarbio
+Leader: Chariesse Lobarbio
 
-Members:
-Kathleen Ann Borromeo
-Hershey Hestiada
-Rhona Eloisa Lumbes
+Members: Kathleen Ann Borromeo | Hershey Hestiada | Rhona Eloisa Lumbes
