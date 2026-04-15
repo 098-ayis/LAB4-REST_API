@@ -16,6 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputData = file_get_contents("php://input");
     $request = json_decode($inputData, true); 
 
+    if (!$request) {
+        $request = $_POST;
+    }
+
     $email      = $request['user_email'] ?? '';
     $pass       = $request['user_pass'] ?? '';
     $first_name = $request['first_name'] ?? '';
