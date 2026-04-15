@@ -4,26 +4,25 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-//database connection
-include 'db_connection.php';
-
-$inputData = file_get_contents("php://input");
-$request = json_decode($inputData, true); 
-
-// Fallback for form-data
-if (!$request) {
-        $request = $_POST;
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
 }
 
-$email      = $request['user_email'] ?? '';
-$pass       = $request['user_pass'] ?? '';
-$first_name = $request['first_name'] ?? '';
-$last_name  = $request['last_name'] ?? '';
-$contact    = $request['contact'] ?? '';
-$role       = $request['user_role'] ?? 'admin';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //database connection
+    include 'db_connection.php';
 
+    $inputData = file_get_contents("php://input");
+    $request = json_decode($inputData, true); 
+
+    $email      = $request['user_email'] ?? '';
+    $pass       = $request['user_pass'] ?? '';
+    $first_name = $request['first_name'] ?? '';
+    $last_name  = $request['last_name'] ?? '';
+    $contact    = $request['contact'] ?? '';
+    $role       = $request['user_role'] ?? 'admin';
+        
     // Validate input
     if (empty($email) || empty($pass) || empty($first_name) || empty($last_name)) {
         http_response_code(400);
