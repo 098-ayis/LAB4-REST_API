@@ -4,21 +4,24 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-//DATABASE CONNECTION
-include 'db_connection.php';
-
-$inputData = file_get_contents("php://input");
-$request = json_decode($inputData, true); 
-
-// Fallback for form-data
-if (!$request) {
-        $request = $_POST;
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
 }
 
-$username = $request['user_email'] ?? '';
-$pass     = $request['user_pass'] ?? '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+     //DATABASE CONNECTION
+     include 'db_connection.php';
+
+     $inputData = file_get_contents("php://input");
+     $request = json_decode($inputData, true); 
+
+     if (!$request) {
+        $request = $_POST;
+    }
+
+     $username = $request['user_email'] ?? '';
+     $pass     = $request['user_pass'] ?? '';
 
     // Validate input
     if (empty($username) || empty($pass)) {
