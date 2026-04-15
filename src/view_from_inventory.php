@@ -1,42 +1,43 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: PUT, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+//database connection
+include 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $conn = new mysqli("localhost", "root", "", "fleurchase_db");
-
-    if ($conn->connect_error) {
-        echo json_encode([
-            "status" => "error",
-            "message" => "Database connection failed"
-        ]);
-        exit;
-    }
 
     $stmt = $conn->prepare("SELECT * FROM inventory");
     $stmt->execute();
     $result = $stmt->get_result();
 
-
     if (!$result) {
+        http_response_code(500);
         echo json_encode([
             "status" => "error",
-            "message" => "Query failed"
+            "code" => 500,
+            "message" => "Internal server error: Query failed"
         ]);
         exit;
     }
 
+    http_response_code(200);
     echo json_encode([
         "status" => "success",
+        "code" => 200,
         "data" => $result->fetch_all(MYSQLI_ASSOC)
     ]);
 
     $stmt->close();
     $conn->close();
+    
 } else {
     http_response_code(405);
     echo json_encode([
         "status" => "error",
+        "code" => 405,
         "message" => "Only GET method allowed"
     ]);
 }
