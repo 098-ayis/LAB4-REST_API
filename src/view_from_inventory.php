@@ -18,15 +18,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $result = $stmt->get_result();
 
     if (!$result) {
+        http_response_code(500);
         echo json_encode([
             "status" => "error",
+            "code" => 500,
             "message" => "Query failed"
         ]);
         exit;
     }
 
+    http_response_code(200);
     echo json_encode([
         "status" => "success",
+        "code" => 200,
         "data" => $result->fetch_all(MYSQLI_ASSOC)
     ]);
 
@@ -36,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     http_response_code(405);
     echo json_encode([
         "status" => "error",
+        "code" => 405,
         "message" => "Only GET method allowed"
     ]);
 }
