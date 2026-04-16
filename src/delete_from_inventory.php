@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         exit;
     }
 
-    $check_stmt = $conn->prepare("SELECT * FROM inventory WHERE inventory_id= ?");
+    $check_stmt = $conn->prepare("SELECT inventory_id FROM inventory WHERE inventory_id= ?");
     $check_stmt->bind_param("i", $inventory_id);
     $check_stmt->execute();
     $result = $check_stmt->get_result();

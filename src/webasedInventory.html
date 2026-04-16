@@ -132,7 +132,7 @@ th {
 </div>
 
 <script>
-  const apiUrl = "http://localhost/sampleAdet/view_from_inventory.php";
+  const apiUrl = "http://localhost/LAB4-REST_API/view_from_inventory.php";
 
 /* LOAD DATA */
 function loadInventory() {
@@ -197,7 +197,7 @@ function addItem() {
         return;
     }
 
-    fetch("http://localhost/adetProject/add_to_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/add_to_inventory.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -242,7 +242,7 @@ function updateItem() {
     const date = document.getElementById("edit_date").value;
     const shelf = document.getElementById("edit_shelf").value;
 
-    fetch("http://localhost/adetProject/update_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/update_inventory.php", {
         method: "PUT", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -271,7 +271,7 @@ function updateItem() {
 function deleteItem(id) {
     if (!confirm("Are you sure?")) return;
 
-    fetch("http://localhost/adetProject/delete_from_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/delete_from_inventory.php", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ inventory_id: id })
