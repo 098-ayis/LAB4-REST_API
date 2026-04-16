@@ -1,0 +1,291 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inventory List</title>
+
+<style>
+body {
+    font-family: Arial;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+/* ADD BUTTON (floating) */
+.add-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 30px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background: #0056b3;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: white;
+    width: 350px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Inventory List</h2>
+
+<table id="inventoryTable">
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Stock</th>
+    <th>Date Arrived</th>
+    <th>Shelf Life</th>
+    <th>Actions</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<!-- FLOATING ADD BUTTON -->
+<button class="add-btn" onclick="openModal()">+</button>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h3>Add Product</h3>
+
+        <input type="text" id="name" placeholder="Flower Name">
+        <input type="number" id="price" placeholder="Price">
+        <input type="number" id="stock" placeholder="Stock">
+        <input type="date" id="date">
+        <input type="number" id="shelf" placeholder="Shelf Life">
+
+        <button onclick="addItem()">Save</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <h3>Edit Product</h3>
+
+        <!-- Hidden ID -->
+        <input type="hidden" id="edit_id">
+
+        <input type="text" id="edit_name" placeholder="Flower Name">
+        <input type="number" id="edit_price" placeholder="Price">
+        <input type="number" id="edit_stock" placeholder="Stock">
+        <input type="date" id="edit_date">
+        <input type="number" id="edit_shelf" placeholder="Shelf Life">
+
+        <button onclick="updateItem()">Update</button>
+        <button onclick="closeEditModal()">Cancel</button>
+    </div>
+</div>
+
+<script>
+  const apiUrl = "http://localhost/sampleAdet/view_from_inventory.php";
+
+/* LOAD DATA */
+function loadInventory() {
+    fetch(apiUrl)
+    .then(res => res.json())
+    .then(result => {
+        const tableBody = document.querySelector("#inventoryTable tbody");
+        tableBody.innerHTML = "";
+
+        if (result.status === "success") {
+            result.data.forEach(item => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${item.inventory_id}</td>
+                    <td>${item.flower_name}</td>
+                    <td>${item.base_price_per_stem}</td>
+                    <td>${item.stock}</td>
+                    <td>${item.date_arrived}</td>
+                    <td>${item.shelf_life}</td>
+                    <td>
+                        <button onclick="openEditModal(
+                            ${item.inventory_id},
+                            '${item.flower_name}',
+                            ${item.stock},
+                            ${item.base_price_per_stem},
+                            '${item.date_arrived}',
+                            ${item.shelf_life}
+                        )">Edit</button>
+
+                        <button onclick="deleteItem(${item.inventory_id})" style="background:red;color:white;">
+                            Delete
+                        </button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+    });
+}
+
+/* OPEN / CLOSE MODAL */
+function openModal() {
+    document.getElementById("modal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+/* ADD ITEM (CREATE) */
+function addItem() {
+    const name = document.getElementById("name").value;
+    const price = document.getElementById("price").value;
+    const stock = document.getElementById("stock").value;
+    const date = document.getElementById("date").value;
+    const shelf = document.getElementById("shelf").value;
+
+    if (!name || !price || !stock || !date || !shelf) {
+        alert("All fields are required!");
+        return;
+    }
+
+    fetch("http://localhost/adetProject/add_to_inventory.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            flower_name: name,
+            base_price_per_stem: price,
+            stock: stock,
+            date_arrived: date,
+            shelf_life: shelf,
+            flower_image: ""
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || "Added successfully");
+        closeModal();
+        loadInventory();
+    })
+    .catch(() => alert("Add failed"));
+}
+
+function openEditModal(id, name, stock, price, date, shelf) {
+    document.getElementById("editModal").style.display = "flex";
+
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_name").value = name;
+    document.getElementById("edit_price").value = price;
+    document.getElementById("edit_stock").value = stock;
+    document.getElementById("edit_date").value = date;
+    document.getElementById("edit_shelf").value = shelf;
+}
+
+function closeEditModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+/* EDIT */
+function updateItem() {
+    const id = document.getElementById("edit_id").value;
+    const name = document.getElementById("edit_name").value;
+    const price = document.getElementById("edit_price").value;
+    const stock = document.getElementById("edit_stock").value;
+    const date = document.getElementById("edit_date").value;
+    const shelf = document.getElementById("edit_shelf").value;
+
+    fetch("http://localhost/adetProject/update_inventory.php", {
+        method: "PUT", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            inventory_id: id,
+            flower_name: name,
+            stock: stock,
+            base_price_per_stem: price,
+            date_arrived: date,
+            shelf_life: shelf,
+            flower_image: ""
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || "Updated successfully");
+        closeEditModal();
+        loadInventory(); // reload table
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Update failed");
+    });
+}
+
+/* DELETE */
+function deleteItem(id) {
+    if (!confirm("Are you sure?")) return;
+
+    fetch("http://localhost/adetProject/delete_from_inventory.php", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inventory_id: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || "Deleted successfully");
+        loadInventory();
+    });
+}
+
+/* INIT */
+loadInventory();
+</script>
+
+</body>
+</html>
