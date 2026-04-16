@@ -31,8 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         !isset($request['date_arrived']) ||
         !isset($request['shelf_life'])
     ) {
+        http_response_code(400);
         echo json_encode([
             "status" => "error",
+            "code" => 400,
             "message" => "Missing required fields"
         ]);
         exit;
@@ -53,14 +55,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
+        http_response_code(201);
         echo json_encode([
             "status" => "success",
+            "code" => 201,
             "message" => "Flower added successfully",
             "insert_id" => $stmt->insert_id
         ]);
     } else {
+        http_response_code(500);
         echo json_encode([
             "status" => "error",
+            "code" => 500,
             "message" => "Insert failed"
         ]);
     }
@@ -72,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo json_encode([
         "status" => "error",
+        "code" => 405,
         "message" => "Only POST method allowed"
     ]);
 }
