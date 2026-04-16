@@ -98,27 +98,30 @@ def register():
         input("\nPress Enter to return to the main menu...")
 
 def show_products():
-    print(f"\n\n\n{PINK}******************************")
-    print(f"      CURRENT INVENTORY       ")
-    print(f"******************************{RESET}")
+    print(f"\n\n\n{PINK}********************************************************************************")
+    print(f"                               CURRENT INVENTORY                                ")
+    print(f"********************************************************************************{RESET}")
+    
     response = requests.get(f"{path}view_from_inventory.php")
     data = handle_api_response(response)
     
     if data and 'inventory' in data:
-        header = f"| {'ID':<4} | {'Flower Name':<20} | {'Stock':<6} | {'Price':<8} | {'Date Arrived':<12} | {'Life':<8} |"
+        header = f"| {'ID':<4} | {'Flower Name':<20} | {'Stock':<6} | {'Price':<8} | {'Date Arrived':<12} | {'Shelf Life':<10} |"
         line = "-" * len(header)
         
         print(line)
-        print(header)
+        print(f"{BOLD}{header}{RESET}")
         print(line)
         
         for item in data['inventory']:
+            # We align the number (3 spaces) and then the word "days"
+            # This ensures the 'd' in 'days' always starts at the same spot
             print(f"| {item['inventory_id']:<4} | "
                   f"{item['flower_name']:<20} | "
                   f"{item['stock']:<6} | "
                   f"P{float(item['base_price_per_stem']):<7.2f} | "
                   f"{item['date_arrived']:<12} | "
-                  f"{item['shelf_life']:<3} days |")
+                  f"{item['shelf_life']:>3} days   |")
         
         print(line)
     elif data:
@@ -227,3 +230,5 @@ if __name__ == "__main__":
             register()
         elif start_choice == '3':
             break
+        else:
+            print(f"\n{RED}Invalid choice.{RESET}")
