@@ -63,7 +63,7 @@ def login():
     print(f"\n\n\n{PINK}******************************")
     print(f"      FLEURCHASE LOGIN       ")
     print(f"******************************{RESET}")
-    email = input("Email: ")
+    email = input("\nEmail: ")
     password = input("Password: ")
     
     payload = {'user_email': email, 'user_pass': password}
@@ -74,7 +74,7 @@ def register():
     print(f"\n\n\n{PINK}******************************")
     print(f"      REGISTER ACCOUNT       ")
     print(f"******************************{RESET}")
-    first_name = input("First Name: ")
+    first_name = input("\nFirst Name: ")
     last_name  = input("Last Name: ")
     contact    = input("Contact Number: ")
     email      = input("Email Address: ")
@@ -128,7 +128,7 @@ def add_product():
     print(f"\n\n\n{PINK}******************************")
     print(f"        ADD NEW PRODUCT       ")
     print(f"******************************{RESET}")
-    name = input("Flower Name: ")
+    name = input("\nFlower Name: ")
     image = input("Image Filename: ") 
     stock = input("Quantity: ")
     price = input("Price per stem: ")
@@ -151,7 +151,7 @@ def update_product():
     print(f"\n\n\n{PINK}******************************")
     print(f"        UPDATE PRODUCT       ")
     print(f"******************************{RESET}")
-    item_id = input("Enter Product ID to update: ")
+    item_id = input("\nEnter Product ID to update: ")
     name = input("Flower Name: ")
     image = input("Image Filename: ")
     new_stock = input("Enter New Stock Quantity: ")
@@ -173,8 +173,10 @@ def update_product():
     handle_api_response(response)
 
 def delete_product():
-    print("\n--- DELETE PRODUCT ---")
-    item_id = input("Enter Product ID to delete: ")
+    print(f"\n\n\n{PINK}******************************")
+    print(f"         DELETE PRODUCT       ")
+    print(f"******************************{RESET}")
+    item_id = input("\nEnter Product ID to delete: ")
     
     payload = {'inventory_id': item_id}
     
@@ -203,7 +205,7 @@ if __name__ == "__main__":
                     print("2. Add Product")
                     print("3. Update Product")
                     print("4. Delete Product")
-                    print("5. Logout")
+                    print("5. Log out")
                     
                     choice = input("\nSelect Option (1-5): ")
                     
