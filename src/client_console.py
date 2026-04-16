@@ -1,5 +1,4 @@
 import requests
-import os
 
 # Color Definitions
 GREEN = "\033[92m"
