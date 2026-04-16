@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                             flower_name = ?,
                             flower_image = ?,
                             stock = ?,
-                            price = ?,
+                            base_price_per_stem = ?,
                             date_arrived = ?,
                             shelf_life = ?
                             WHERE inventory_id = ?");
