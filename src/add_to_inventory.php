@@ -1,26 +1,25 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Connect to database
-    $conn = new mysqli("localhost", "root", "", "fleurchase_db");
-
-    if ($conn->connect_error) {
-        echo json_encode([
-            "status" => "error",
-            "message" => "Database connection failed"
-        ]);
-        exit;
-    }
+    include 'db_connection.php';
 
     // Capture incoming JSON data
     $inputData = file_get_contents("php://input");
-    $request = json_decode($inputData, true);
+    $request = json_decode($inputData, true); 
 
     // Fallback for form-data
     if (!$request) {
-        $request = $_POST;
+            $request = $_POST;
     }
 
     // Validate required fields
