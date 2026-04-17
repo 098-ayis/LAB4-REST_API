@@ -1,7 +1,7 @@
 document.getElementById("addForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    fetch("http://localhost/fleurchase/backend/add_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/src/add_to_inventory.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -23,7 +23,7 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
 });
 
 function loadInventory() {
-    fetch("http://localhost/fleurchase/backend/get_inventory.php")
+    fetch("http://localhost/LAB4-REST_API/src/view_from_inventory.php")
     .then(res => res.json())
     .then(data => {
         let table = document.getElementById("inventoryTable");
@@ -49,7 +49,7 @@ function loadInventory() {
 loadInventory();
 
 function deleteItem(id) {
-    fetch("http://localhost/fleurchase/backend/delete_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/src/delete_from_inventory.php", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -67,7 +67,7 @@ function updateItem(id) {
     let newStock = prompt("New stock:");
     let newPrice = prompt("New price:");
 
-    fetch("http://localhost/fleurchase/backend/update_inventory.php", {
+    fetch("http://localhost/LAB4-REST_API/src/update_inventory.php", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

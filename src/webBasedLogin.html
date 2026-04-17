@@ -116,8 +116,6 @@ function register() {
     const lastName = document.getElementById("regLastName").value;
     const contact = document.getElementById("regContact").value;
 
-
-
    fetch("http://localhost/LAB4-REST_API/src/register.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -169,17 +167,27 @@ function login() {
             regMsg.innerText = "User not found. Please register first.";
             regMsg.style.color = "red";
         }
-
+        
         /* REDIRECT */
         if (data.status === "success") {
+            loginMsg.innerText = data.message;
+            loginMsg.style.color = "green";
+
             setTimeout(() => {
+                    window.location.href = "webBasedInventory.html";
+                }, 800);
+
+            fetch("http://localhost/LAB4-REST_API/src/view_from_inventory.php")
+            .then(res => res.json())
+            .then(invData => {
+                if (invData.status === "success") {
+                    alert(invData.message); 
+                }
+            })
+            .catch(() => {
                 window.location.href = "webBasedInventory.html";
-            }, 800);
+            });
         }
-    })
-    .catch(() => {
-        loginMsg.innerText = "Server error (check PHP)";
-        loginMsg.style.color = "red";
     });
 }
 </script>

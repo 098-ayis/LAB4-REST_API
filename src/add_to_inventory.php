@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Connect to database
+    // Databse connection
     include 'db_connection.php';
 
     // Capture incoming JSON data
@@ -22,20 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $request = $_POST;
     }
 
-    // Validate required fields
-    if (
-        !isset($request['flower_name']) ||
-        !isset($request['flower_image']) ||
-        !isset($request['stock']) ||
-        !isset($request['base_price_per_stem']) ||
-        !isset($request['date_arrived']) ||
-        !isset($request['shelf_life'])
-    ) {
-        http_response_code(400);
+    $name   = trim($request['flower_name'] ?? '');
+    $image  = trim($request['flower_image'] ?? '');
+    $stock  = trim($request['stock'] ?? '');
+    $price  = trim($request['base_price_per_stem'] ?? '');
+    $date   = trim($request['date_arrived'] ?? '');
+    $life   = trim($request['shelf_life'] ?? '');
+
+    if ($name === "" || $image === "" || $stock === "" || $price === "" || $date === "" || $life === "") {
+        http_response_code(400); // Bad Request
         echo json_encode([
             "status" => "error",
             "code" => 400,
-            "message" => "Missing required fields"
+            "message" => "All fields are required. Empty values are not allowed."
         ]);
         exit;
     }

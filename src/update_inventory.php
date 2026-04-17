@@ -46,12 +46,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         echo json_encode([
             "status" => "error", 
             "code" => 404, 
-            "message" => "Record not found"
+            "message" => "Record not found. ID $inventory_id does not exist."
         ]);
         $check_stmt->close();
         exit;
     }
     $check_stmt->close();
+
+    if (empty($flower_name) && empty($stock) && empty($price)) {
+        http_response_code(200); // OK, ID exists, ready for edit
+        echo json_encode([
+            "status" => "success",
+            "code" => 200,
+            "message" => "ID Verified. Ready for new data."
+        ]);
+        exit;
+    }
 
     $stmt = $conn->prepare("UPDATE inventory SET
                             flower_name = ?,

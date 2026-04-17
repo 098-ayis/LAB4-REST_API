@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode([
         "status" => "success",
         "code" => 200,
+        "message" => "Inventory list retrieved successfully",
         "inventory" => $result->fetch_all(MYSQLI_ASSOC)
     ]);
 
